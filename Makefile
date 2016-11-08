@@ -26,8 +26,11 @@ LIBRARY_PATHS = \
 # Define libraries to link into the executable.
 LINKER_FLAGS = \
 	-lHybridMath \
+	-framework OpenGL \
+	-lGLEW \
 	-lSDL2 \
-	-lSDL2_image
+	-lSDL2_image \
+	-ljsoncpp
 
 # Define source files.
 SOURCE_FILES = \
