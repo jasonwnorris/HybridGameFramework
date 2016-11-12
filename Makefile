@@ -14,6 +14,7 @@ COMPILER_FLAGS = \
 INCLUDE_PATHS = \
 	-I../HybridMath/include \
 	-I../HybridMath/template \
+	-I../HybridStrings/include \
 	-I/usr/local/include \
 	-I/usr/local/opt/openal-soft/include \
 	-I./include
@@ -21,11 +22,13 @@ INCLUDE_PATHS = \
 # Define directories containing libraries to include.
 LIBRARY_PATHS = \
 	-L../HybridMath/lib \
+	-L../HybridStrings/lib \
 	-L/usr/local/lib
 
 # Define libraries to link into the executable.
 LINKER_FLAGS = \
 	-lHybridMath \
+	-lHybridStrings \
 	-framework OpenGL \
 	-lGLEW \
 	-lSDL2 \
