@@ -55,6 +55,8 @@ namespace HGF
       unsigned char GetBlueAsByte() const;
       unsigned char GetAlphaAsByte() const;
 
+      unsigned int GetAsComposite() const;
+
       void SetRed(float p_Red);
       void SetGreen(float p_Green);
       void SetBlue(float p_Blue);
@@ -64,6 +66,8 @@ namespace HGF
       void SetGreenFromByte(unsigned char p_Green);
       void SetBlueFromByte(unsigned char p_Blue);
       void SetAlphaFromByte(unsigned char p_Alpha);
+
+      void SetFromComposite(unsigned int p_Color);
 
       void Invert(bool p_InvertAlpha = false);
       Color Inverse(bool p_InvertAlpha = false) const;

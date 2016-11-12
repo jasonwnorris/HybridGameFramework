@@ -54,6 +54,54 @@ namespace HGF
     return m_Wrapping;
   }
 
+  bool Texture::GetPixelColor(unsigned int p_X, unsigned int p_Y, Color& p_Color)
+  {
+    // Check if within bounds.
+    if (p_X >= m_Width || p_Y >= m_Height)
+    {
+      SDL_Log("[HGF::Texture::GetPixelColor] Coordinates are out of texture bounds.");
+      return false;
+    }
+
+    p_Color = m_Colors[p_X + p_Y * m_Width];
+
+    return true;
+  }
+
+  bool Texture::FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, TextureInterpolation p_Interpolation, TextureWrapping p_Wrapping)
+  {
+    // Check if already loaded.
+    if (m_IsLoaded)
+    {
+      SDL_Log("[HGF::Texture::FromPixelColors] Texture is already loaded.");
+      return false;
+    }
+
+    // Collect metrics.
+    m_Width = p_Width;
+    m_Height = p_Height;
+    m_BytesPerPixel = 4;
+    m_Interpolation = p_Interpolation;
+    m_Wrapping = p_Wrapping;
+
+    // Copy colors to composite pixels.
+    std::vector<unsigned int> pixels;
+    for (const auto& color : p_Colors)
+    {
+      pixels.push_back(color.GetAsComposite());
+
+      m_Colors.push_back(color);
+    }
+
+    // Create the texture.
+    if (!CreateFromPixelData(static_cast<void*>(&pixels.front())))
+    {
+      return false;
+    }
+
+    return (m_IsLoaded = true);
+  }
+
   bool Texture::Load(const std::string& p_Filename, TextureInterpolation p_Interpolation, TextureWrapping p_Wrapping)
   {
     // Check if already loaded.
@@ -78,14 +126,59 @@ namespace HGF
     m_Interpolation = p_Interpolation;
     m_Wrapping = p_Wrapping;
 
+    // Gather pixel colors.
+    Color color;
+    for (int y = 0; y < m_Height; ++y)
+    {
+      for (int x = 0; x < m_Width; ++x)
+      {
+        if (ReadColorDataFromSurface(surface, x, y, color))
+        {
+          m_Colors.push_back(color);
+        }
+      }
+    }
+
+    // Create the texture.
+    if (!CreateFromPixelData(surface->pixels))
+    {
+      return false;
+    }
+
+    // Free the loaded surface.
+    SDL_FreeSurface(surface);
+
+    return (m_IsLoaded = true);
+  }
+
+  void Texture::Unload()
+  {
+    if (!m_IsLoaded)
+    {
+      SDL_Log("[HGF::Texture::Unload] Texture not loaded. Doing nothing.");
+    }
+    else
+    {
+      // Delete the texture.
+      if (m_ID != -1)
+      {
+        glDeleteTextures(1, &m_ID);
+      }
+
+      m_IsLoaded = false;
+    }
+  }
+
+  bool Texture::CreateFromPixelData(void* p_PixelData)
+  {
     // Check dimensions.
     if (!HM::Math::IsPowerOfTwo(m_Width))
     {
-      SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::Load] Texture width is not a power of two.");
+      SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::CreateFromPixelData] Width is not a power of two.");
     }
     if (!HM::Math::IsPowerOfTwo(m_Height))
     {
-      SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::Load] Texture height is not a power of two.");
+      SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::CreateFromPixelData] Height is not a power of two.");
     }
 
     // Determine color mode.
@@ -99,14 +192,14 @@ namespace HGF
         format = GL_RGBA;
         break;
       default:
-        SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::Load] Pixel data does not use true color.");
+        SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::CreateFromPixelData] Pixel data does not use true color.");
         return false;
     }
 
     // Generate and create the texture.
     glGenTextures(1, &m_ID);
     glBindTexture(GL_TEXTURE_2D, m_ID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, p_PixelData);
 
     // Set scaling interpolation.
     switch (m_Interpolation)
@@ -147,27 +240,46 @@ namespace HGF
     // Unbind the texture.
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Free the loaded surface.
-    SDL_FreeSurface(surface);
-
-    return (m_IsLoaded = true);
+    return true;
   }
 
-  void Texture::Unload()
+  bool Texture::ReadColorDataFromSurface(SDL_Surface* p_Surface, unsigned int p_X, unsigned int p_Y, Color& p_Color)
   {
-    if (!m_IsLoaded)
+    // Check if within bounds.
+    if (p_X >= m_Width || p_Y >= m_Height)
     {
-      SDL_Log("[HGF::Texture::Unload] Texture not loaded. Doing nothing.");
+      SDL_Log("[HGF::Texture::ReadColorDataFromSurface] Coordinates are out of texture bounds.");
+      return false;
     }
-    else
-    {
-      // Delete the texture.
-      if (m_ID != -1)
-      {
-        glDeleteTextures(1, &m_ID);
-      }
 
-      m_IsLoaded = false;
+    Uint32 pixel = -1;
+    Uint8* pointer = static_cast<Uint8*>(p_Surface->pixels) + p_Y * p_Surface->pitch + p_X * m_BytesPerPixel;
+
+    switch (m_BytesPerPixel)
+    {
+      case 1:
+        pixel = *pointer;
+        break;
+      case 2:
+        pixel = *(Uint16*)pointer;
+        break;
+      case 3:
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        pixel = pointer[0] << 16 | pointer[1] << 8 | pointer[2];
+#else
+        pixel = pointer[0] | pointer[1] << 8 | pointer[2] << 16;
+#endif
+        break;
+      case 4:
+        pixel = *(Uint32*)pointer;
+        break;
+      default:
+        SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[HGF::Texture::ReadColorDataFromSurface] Pixel data has unknown color format.");
+        return false;
     }
+
+    p_Color.SetFromComposite(pixel);
+
+    return true;
   }
 }

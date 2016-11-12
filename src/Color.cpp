@@ -1,5 +1,7 @@
 // Color.cpp
 
+// SDL2 Includes
+#include <SDL2/SDL.h>
 // HGF Includes
 #include <HGF/Color.hpp>
 // HM Includes
@@ -186,6 +188,21 @@ namespace HGF
     return static_cast<unsigned char>(GetAlpha() * 255);
   }
 
+  unsigned int Color::GetAsComposite() const
+  {
+    SDL_PixelFormat* format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+
+    Uint32 color = SDL_MapRGBA(format,
+                               static_cast<unsigned char>(GetRedAsByte()),
+                               static_cast<unsigned char>(GetGreenAsByte()),
+                               static_cast<unsigned char>(GetBlueAsByte()),
+                               static_cast<unsigned char>(GetAlphaAsByte()));
+
+    SDL_FreeFormat(format);
+
+    return static_cast<unsigned int>(color);
+  }
+
   void Color::SetRed(float p_Red)
   {
     m_Red = p_Red;
@@ -224,6 +241,24 @@ namespace HGF
   void Color::SetAlphaFromByte(unsigned char p_Alpha)
   {
     m_Alpha = p_Alpha / 255.0f;
+  }
+
+  void Color::SetFromComposite(Uint32 p_Color)
+  {
+    SDL_PixelFormat* format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+
+    Uint8 red;
+    Uint8 green;
+    Uint8 blue;
+    Uint8 alpha;
+    SDL_GetRGBA(p_Color, format, &red, &green, &blue, &alpha);
+
+    SDL_FreeFormat(format);
+
+    SetRedFromByte(static_cast<unsigned char>(red));
+    SetGreenFromByte(static_cast<unsigned char>(green));
+    SetBlueFromByte(static_cast<unsigned char>(blue));
+    SetAlphaFromByte(static_cast<unsigned char>(alpha));
   }
 
   void Color::Invert(bool p_InvertAlpha)
