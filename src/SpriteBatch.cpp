@@ -529,12 +529,12 @@ namespace HGF
     return true;
   }
 
-  bool SpriteBatch::DrawString(const SpriteFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, float p_Depth)
+  bool SpriteBatch::DrawString(const IFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, float p_Depth)
   {
     return DrawString(p_Font, p_String, p_Position, p_Color, HM::Vector2f::Zero, 0.0f, HM::Vector2f::One, HGF::Orientation::None, p_Depth);
   }
 
-  bool SpriteBatch::DrawString(const SpriteFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, const HM::Vector2f& p_Origin, float p_Rotation, const HM::Vector2f& p_Scale, Orientation p_Orientation, float p_Depth)
+  bool SpriteBatch::DrawString(const IFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, const HM::Vector2f& p_Origin, float p_Rotation, const HM::Vector2f& p_Scale, Orientation p_Orientation, float p_Depth)
   {
     if (!m_WithinDrawPair)
     {

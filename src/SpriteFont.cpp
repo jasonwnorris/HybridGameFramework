@@ -10,25 +10,20 @@ namespace HGF
 {
   SpriteFont::SpriteFont()
   {
-    m_IsLoaded = false;
   }
 
   SpriteFont::~SpriteFont()
   {
-    if (m_IsLoaded)
-    {
-      Unload();
-    }
   }
 
   float SpriteFont::GetCharacterSpacing(unsigned int p_Character) const
   {
-    return m_Spacing;
+    return m_Options.Spacing;
   }
 
   float SpriteFont::GetLineSpacing() const
   {
-    return m_Size;
+    return m_Options.Size;
   }
 
   const Texture& SpriteFont::GetTexture() const
@@ -66,7 +61,7 @@ namespace HGF
     p_Dimensions.Y = static_cast<float>(lineCount * m_Texture.GetHeight() / 16);
   }
 
-  bool SpriteFont::Load(const std::string& p_Filename, float p_Size, float p_Spacing)
+  bool SpriteFont::Load(const std::string& p_Filename, const SpriteFontOptions& p_Options)
   {
     // Currently only supports textures with 16x16 rendered ASCII-ordered glyphs.
     if (!m_Texture.Load(p_Filename, TextureInterpolation::Nearest, TextureWrapping::ClampToEdge))
@@ -74,23 +69,15 @@ namespace HGF
       return false;
     }
 
-    m_Size = p_Size;
-    m_Spacing = p_Spacing;
+    m_Options = p_Options;
 
     return (m_IsLoaded = true);
   }
 
   void SpriteFont::Unload()
   {
-    if (!m_IsLoaded)
-    {
-      SDL_Log("[HGF::SpriteFont::Unload] SpriteFont already unloaded. Doing nothing.");
-    }
-    else
-    {
-      m_Texture.Unload();
+    m_Texture.Unload();
 
-      m_IsLoaded = false;
-    }
+    m_IsLoaded = false;
   }
 }

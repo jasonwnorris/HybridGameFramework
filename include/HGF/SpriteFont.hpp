@@ -4,37 +4,32 @@
 #define __HGF_SPRITEFONT_HPP__
 
 // HGF Includes
-#include <HGF/Texture.hpp>
-// HM Includes
-#include <HM/Rectangle.hpp>
-#include <HM/Vector2.hpp>
-// STL Includes
-#include <string>
+#include <HGF/IFont.hpp>
+#include <HGF/ILoadable.hpp>
+#include <HGF/SpriteFontOptions.hpp>
 
 namespace HGF
 {
-  class SpriteFont
+  class SpriteFont : public IFont, public ILoadable<SpriteFontOptions>
   {
     public:
       SpriteFont();
       ~SpriteFont();
 
-      float GetCharacterSpacing(unsigned int p_Character) const;
-      float GetLineSpacing() const;
+      float GetCharacterSpacing(unsigned int p_Character) const override;
+      float GetLineSpacing() const override;
 
-      const Texture& GetTexture() const;
-      HM::Rectanglef GetCharacterBounds(unsigned int p_Character) const;
+      const Texture& GetTexture() const override;
+      HM::Rectanglef GetCharacterBounds(unsigned int p_Character) const override;
 
-      void MeasureString(const std::string& p_String, HM::Vector2f& p_Dimensions);
+      void MeasureString(const std::string& p_String, HM::Vector2f& p_Dimensions) override;
 
-      bool Load(const std::string& p_Filename, float p_Size, float p_Spacing);
-      void Unload();
+      bool Load(const std::string& p_Filename, const SpriteFontOptions& p_Options) override;
+      void Unload() override;
 
     private:
-      bool m_IsLoaded;
       Texture m_Texture;
-      float m_Size;
-      float m_Spacing;
+      SpriteFontOptions m_Options;
   };
 }
 

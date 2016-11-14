@@ -8,11 +8,11 @@
 #include <HGF/Camera.hpp>
 #include <HGF/Color.hpp>
 #include <HGF/Effect.hpp>
+#include <HGF/IFont.hpp>
 #include <HGF/Orientation.hpp>
 #include <HGF/RasterizerState.hpp>
 #include <HGF/SortMode.hpp>
 #include <HGF/SpriteBatchItem.hpp>
-#include <HGF/SpriteFont.hpp>
 #include <HGF/Texture.hpp>
 // HM Includes
 #include <HM/Rectangle.hpp>
@@ -67,8 +67,8 @@ namespace HGF
       bool DrawSprite(const Texture& p_Texture, const HM::Rectanglef& p_DestinationRectangle, const HM::Rectanglef& p_SourceRectangle, const Color& p_Color, const HM::Vector2f& p_Origin, float p_Rotation, const HM::Vector2f& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
       bool DrawSprite(const Texture& p_Texture, const HM::Vector2f& p_Position, const HM::Rectanglef& p_SourceRectangle, const Color& p_Color, const HM::Vector2f& p_Origin, float p_Rotation, const HM::Vector2f& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 
-      bool DrawString(const SpriteFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, float p_Depth = 0.0f);
-      bool DrawString(const SpriteFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, const HM::Vector2f& p_Origin, float p_Rotation, const HM::Vector2f& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+      bool DrawString(const IFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, float p_Depth = 0.0f);
+      bool DrawString(const IFont* const p_Font, const std::string& p_String, const HM::Vector2f& p_Position, const Color& p_Color, const HM::Vector2f& p_Origin, float p_Rotation, const HM::Vector2f& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 
       bool End();
 
