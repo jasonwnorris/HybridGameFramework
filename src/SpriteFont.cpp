@@ -4,7 +4,6 @@
 #include <HGF/SpriteFont.hpp>
 // STL Includes
 #include <sstream>
-#include <stdio.h>
 
 namespace HGF
 {
@@ -14,6 +13,10 @@ namespace HGF
 
   SpriteFont::~SpriteFont()
   {
+    if (m_IsLoaded)
+    {
+      Unload();
+    }
   }
 
   float SpriteFont::GetCharacterSpacing(unsigned int p_Character) const

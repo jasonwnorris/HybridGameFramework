@@ -33,6 +33,7 @@ LINKER_FLAGS = \
 	-lGLEW \
 	-lSDL2 \
 	-lSDL2_image \
+	-lSDL2_ttf \
 	-ljsoncpp
 
 # Define source files.
