@@ -44,14 +44,14 @@ namespace HGF
     return m_BytesPerPixel;
   }
 
-  TextureInterpolation Texture::GetInterpolation() const
+  const TextureInterpolation& Texture::GetInterpolation() const
   {
-    return m_Interpolation;
+    return m_Options.Interpolation;
   }
 
-  TextureWrapping Texture::GetWrapping() const
+  const TextureWrapping& Texture::GetWrapping() const
   {
-    return m_Wrapping;
+    return m_Options.Wrapping;
   }
 
   bool Texture::GetPixelColor(unsigned int p_X, unsigned int p_Y, Color& p_Color)
@@ -68,7 +68,7 @@ namespace HGF
     return true;
   }
 
-  bool Texture::FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, TextureInterpolation p_Interpolation, TextureWrapping p_Wrapping)
+  bool Texture::FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, const TextureOptions& p_Options)
   {
     // Check if already loaded.
     if (m_IsLoaded)
@@ -81,12 +81,11 @@ namespace HGF
     m_Width = p_Width;
     m_Height = p_Height;
     m_BytesPerPixel = 4;
-    m_Interpolation = p_Interpolation;
-    m_Wrapping = p_Wrapping;
+    m_Options = p_Options;
 
     // Copy colors to composite pixels.
     std::vector<unsigned int> pixels;
-    for (const auto& color : p_Colors)
+    for (const Color& color : p_Colors)
     {
       pixels.push_back(color.GetAsComposite());
 
@@ -102,7 +101,7 @@ namespace HGF
     return (m_IsLoaded = true);
   }
 
-  bool Texture::Load(const std::string& p_Filename, TextureInterpolation p_Interpolation, TextureWrapping p_Wrapping)
+  bool Texture::Load(const std::string& p_Filename, const TextureOptions& p_Options)
   {
     // Check if already loaded.
     if (m_IsLoaded)
@@ -123,8 +122,7 @@ namespace HGF
     m_Width = surface->w;
     m_Height = surface->h;
     m_BytesPerPixel = surface->format->BytesPerPixel;
-    m_Interpolation = p_Interpolation;
-    m_Wrapping = p_Wrapping;
+    m_Options = p_Options;
 
     // Gather pixel colors.
     Color color;
@@ -202,7 +200,7 @@ namespace HGF
     glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, p_PixelData);
 
     // Set scaling interpolation.
-    switch (m_Interpolation)
+    switch (m_Options.Interpolation)
     {
       case TextureInterpolation::Linear:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -215,7 +213,7 @@ namespace HGF
     }
 
     // Set edge wrapping.
-    switch (m_Wrapping)
+    switch (m_Options.Wrapping)
     {
       case TextureWrapping::ClampToBorder:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);

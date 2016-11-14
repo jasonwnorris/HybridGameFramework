@@ -7,15 +7,15 @@
 #include <SDL2/SDL.h>
 // HGF Includes
 #include <HGF/Color.hpp>
-#include <HGF/TextureInterpolation.hpp>
-#include <HGF/TextureWrapping.hpp>
+#include <HGF/ILoadable.hpp>
+#include <HGF/TextureOptions.hpp>
 // STL Includes
 #include <string>
 #include <vector>
 
 namespace HGF
 {
-  class Texture
+  class Texture : public ILoadable<TextureOptions>
   {
     public:
       Texture();
@@ -25,12 +25,13 @@ namespace HGF
       unsigned int GetWidth() const;
       unsigned int GetHeight() const;
       unsigned int GetBytesPerPixel() const;
-      TextureInterpolation GetInterpolation() const;
-      TextureWrapping GetWrapping() const;
+      const TextureInterpolation& GetInterpolation() const;
+      const TextureWrapping& GetWrapping() const;
       bool GetPixelColor(unsigned int p_X, unsigned int p_Y, Color& p_Color);
 
-      bool FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, TextureInterpolation p_Interpolation, TextureWrapping p_Wrapping);
-      bool Load(const std::string& p_Filename, TextureInterpolation p_Interpolation, TextureWrapping p_Wrapping);
+      bool FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, const TextureOptions& p_Options);
+
+      bool Load(const std::string& p_Filename, const TextureOptions& p_Options);
       void Unload();
 
     private:
@@ -42,8 +43,7 @@ namespace HGF
       unsigned int m_Width;
       unsigned int m_Height;
       unsigned int m_BytesPerPixel;
-      TextureInterpolation m_Interpolation;
-      TextureWrapping m_Wrapping;
+      TextureOptions m_Options;
       std::vector<Color> m_Colors;
   };
 }

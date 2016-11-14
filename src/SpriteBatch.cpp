@@ -96,7 +96,10 @@ namespace HGF
 
     // Create the blank texture.
     const std::vector<Color> colors = { Color::White };
-    if (!m_BlankTexture.FromPixelColors(1, 1, colors, TextureInterpolation::Nearest, TextureWrapping::Repeat))
+    TextureOptions textureOptions;
+    textureOptions.Interpolation = TextureInterpolation::Nearest;
+    textureOptions.Wrapping = TextureWrapping::Repeat;
+    if (!m_BlankTexture.FromPixelColors(1, 1, colors, textureOptions))
     {
       SDL_Log("[HGF::SpriteBatch::Initialize] Failed to create 1x1 pixel blank texture.");
       return false;

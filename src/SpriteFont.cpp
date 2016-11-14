@@ -67,7 +67,10 @@ namespace HGF
   bool SpriteFont::Load(const std::string& p_Filename, const SpriteFontOptions& p_Options)
   {
     // Currently only supports textures with 16x16 rendered ASCII-ordered glyphs.
-    if (!m_Texture.Load(p_Filename, TextureInterpolation::Nearest, TextureWrapping::ClampToEdge))
+    TextureOptions textureOptions;
+    textureOptions.Interpolation = TextureInterpolation::Nearest;
+    textureOptions.Wrapping = TextureWrapping::ClampToEdge;
+    if (!m_Texture.Load(p_Filename, textureOptions))
     {
       return false;
     }

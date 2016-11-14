@@ -218,7 +218,10 @@ namespace HGF
                                static_cast<int>(alpha)));
       }
     }
-    m_Texture.FromPixelColors(sizeWidth, sizeHeight, pixels, TextureInterpolation::Linear, TextureWrapping::ClampToEdge);
+    TextureOptions textureOptions;
+    textureOptions.Interpolation = TextureInterpolation::Linear;
+    textureOptions.Wrapping = TextureWrapping::ClampToEdge;
+    m_Texture.FromPixelColors(sizeWidth, sizeHeight, pixels, textureOptions);
 
     // Save out surface for testing.
     if (SDL_SaveBMP(canvas, "canvas.bmp") < 0)
