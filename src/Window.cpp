@@ -1,9 +1,14 @@
 // Window.cpp
 
+// OpenGL Includes
+#ifdef __APPLE__
+  #include <OpenGL/gl3.h>
+  #include <OpenGL/gl3ext.h>
+#else
+  #include <GL/glew.h>
+#endif
 // HGF Includes
 #include <HGF/Window.hpp>
-// OpenGL Includes
-#include <GL/glew.h>
 
 namespace HGF
 {
@@ -159,7 +164,7 @@ namespace HGF
     return true;
   }
 
-  bool Window::Finalize()
+  void Window::Finalize()
   {
     if (!m_IsInitialized)
     {
@@ -183,8 +188,6 @@ namespace HGF
 
       m_IsInitialized = false;
     }
-
-    return true;
   }
 
   void Window::GetTitle(std::string& p_Title)

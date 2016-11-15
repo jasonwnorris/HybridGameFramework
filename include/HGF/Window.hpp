@@ -20,7 +20,7 @@ namespace HGF
 
       bool Initialize(const WindowOptions& p_Options = WindowOptions::DefaultOptions);
       bool Reinitialize(const WindowOptions& p_Options = WindowOptions::DefaultOptions);
-      bool Finalize();
+      void Finalize();
 
       void GetTitle(std::string& p_Title);
       void GetPosition(int& p_X, int& p_Y);

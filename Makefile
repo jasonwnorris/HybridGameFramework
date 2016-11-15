@@ -30,7 +30,6 @@ LINKER_FLAGS = \
 	-lHybridMath \
 	-lHybridStrings \
 	-framework OpenGL \
-	-lGLEW \
 	-lSDL2 \
 	-lSDL2_image \
 	-lSDL2_ttf \

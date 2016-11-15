@@ -1,7 +1,12 @@
 // SpriteBatch.cpp
 
 // OpenGL Includes
-#include <GL/glew.h>
+#ifdef __APPLE__
+  #include <OpenGL/gl3.h>
+  #include <OpenGL/gl3ext.h>
+#else
+  #include <GL/glew.h>
+#endif
 // SDL2 Includes
 #include <SDL2/SDL.h>
 // HGF Includes
@@ -39,14 +44,16 @@ namespace HGF
     GLsizei sizeFloat = sizeof(GLfloat);
     GLsizei sizeVPCT = sizeof(VertexPositionColorTexture);
 
+#ifndef __APPLE__
     // Enable GLew.
     glewExperimental = GL_TRUE;
     GLenum res = glewInit();
     if (res != GLEW_OK)
     {
-      SDL_Log("[HGF::SpriteBatch::Initialize] GLEW failed to initialize: %s", glewGetErrorString(res));
+      SDL_Log("[HGF::SpriteBatch::Initialize] GLew failed to initialize: %s", glewGetErrorString(res));
       return false;
     }
+#endif
 
     // Generate data for index buffer.
     GLushort indexData[MaxIndexCount];

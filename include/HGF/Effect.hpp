@@ -3,8 +3,6 @@
 #ifndef __HGF_EFFECT_HPP__
 #define __HGF_EFFECT_HPP__
 
-// GL Includes
-#include <GL/glew.h>
 // GLM Includes
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
