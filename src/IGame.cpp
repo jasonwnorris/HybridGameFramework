@@ -11,6 +11,11 @@ namespace HGF
 
     m_Timer.Start();
 
+    if (!m_Window.Initialize())
+    {
+      return false;
+    }
+
     if (!m_SpriteBatch.Initialize())
     {
       return false;
@@ -37,6 +42,8 @@ namespace HGF
     Finalize();
 
     m_SpriteBatch.Finalize();
+
+    m_Window.Finalize();
 
     return true;
   }

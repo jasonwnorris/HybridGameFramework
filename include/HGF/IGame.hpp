@@ -6,6 +6,7 @@
 // HGF Includes
 #include <HGF/SpriteBatch.hpp>
 #include <HGF/Timer.hpp>
+#include <HGF/Window.hpp>
 
 namespace HGF
 {
@@ -29,6 +30,7 @@ namespace HGF
       bool m_IsRunning;
       Timer m_Timer;
       SpriteBatch m_SpriteBatch;
+      Window m_Window;
   };
 }
 
