@@ -84,6 +84,24 @@ namespace HGF
       return false;
     }
 
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) < 0)
+    {
+      SDL_Log("[HGF::Window::Initialize] Failed to set attribute OpenGL context major version to %i: %s", 3, SDL_GetError());
+      return false;
+    }
+
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2) < 0)
+    {
+      SDL_Log("[HGF::Window::Initialize] Failed to set attribute OpenGL context minor version to %i: %s", 2, SDL_GetError());
+      return false;
+    }
+
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) < 0)
+    {
+      SDL_Log("[HGF::Window::Initialize] Failed to set attribute OpenGL context profile mask: %s", SDL_GetError());
+      return false;
+    }
+
     // Setup window flags.
     Uint32 flags = static_cast<Uint32>(p_Options.Mode) | SDL_WINDOW_OPENGL;
     if (p_Options.IsHidden)
