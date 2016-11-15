@@ -28,15 +28,21 @@ namespace HGF
 
     while (m_IsRunning)
     {
-      if (!Update(m_Timer.GetDeltaTime()))
+      float deltaTime = m_Timer.GetDeltaTime();
+
+      if (!Update(deltaTime))
       {
         return false;
       }
+
+      m_Window.Clear();
 
       if (!Render(m_SpriteBatch))
       {
         return false;
       }
+
+      m_Window.Flip();
     }
 
     Finalize();
