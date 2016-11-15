@@ -3,11 +3,6 @@
 #ifndef __HGF_IGAME_HPP__
 #define __HGF_IGAME_HPP__
 
-// HGF Includes
-#include <HGF/SpriteBatch.hpp>
-#include <HGF/Timer.hpp>
-#include <HGF/Window.hpp>
-
 namespace HGF
 {
   class IGame
@@ -23,14 +18,11 @@ namespace HGF
       virtual bool Initialize() = 0;
       virtual void Finalize() = 0;
 
-      virtual bool Update(float p_DeltaTime) = 0;
-      virtual bool Render(SpriteBatch& p_SpriteBatch) = 0;
+      virtual bool Update() = 0;
+      virtual bool Render() = 0;
 
     private:
       bool m_IsRunning;
-      Timer m_Timer;
-      SpriteBatch m_SpriteBatch;
-      Window m_Window;
   };
 }
 

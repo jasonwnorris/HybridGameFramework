@@ -9,18 +9,6 @@ namespace HGF
   {
     m_IsRunning = true;
 
-    m_Timer.Start();
-
-    if (!m_Window.Initialize())
-    {
-      return false;
-    }
-
-    if (!m_SpriteBatch.Initialize())
-    {
-      return false;
-    }
-
     if (!Initialize())
     {
       return false;
@@ -28,28 +16,18 @@ namespace HGF
 
     while (m_IsRunning)
     {
-      float deltaTime = m_Timer.GetDeltaTime();
-
-      if (!Update(deltaTime))
+      if (!Update())
       {
         return false;
       }
 
-      m_Window.Clear();
-
-      if (!Render(m_SpriteBatch))
+      if (!Render())
       {
         return false;
       }
-
-      m_Window.Flip();
     }
 
     Finalize();
-
-    m_SpriteBatch.Finalize();
-
-    m_Window.Finalize();
 
     return true;
   }
