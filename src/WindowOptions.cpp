@@ -10,8 +10,8 @@
 namespace HGF
 {
   const std::string WindowOptions::DefaultTitle = "Untitled Window";
-  const int WindowOptions::DefaultWidth = 1024;
-  const int WindowOptions::DefaultHeight = 768;
+  const int WindowOptions::DefaultWidth = 1280;
+  const int WindowOptions::DefaultHeight = 720;
   const WindowMode WindowOptions::DefaultMode = WindowMode::Windowed;
   const bool WindowOptions::DefaultIsVerticalSyncEnabled = true;
   const bool WindowOptions::DefaultIsHidden = false;
