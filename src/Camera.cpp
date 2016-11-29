@@ -10,6 +10,7 @@ namespace HGF
   const Camera Camera::DefaultCamera;
   const unsigned int Camera::DefaultWidth = 1280;
   const unsigned int Camera::DefaultHeight = 720;
+  const glm::vec3 Camera::ForwardAxis = glm::vec3(0.0f, 0.0f, 1.0f);
 
   Camera::Camera()
   {
@@ -17,7 +18,9 @@ namespace HGF
     m_Rotation = 0.0f;
     m_Scale = HM::Vector2f::One;
     m_Width = DefaultWidth;
+    m_HalfWidth = m_Width / 2.0f;
     m_Height = DefaultHeight;
+    m_HalfHeight = m_Height / 2.0f;
   }
 
   Camera::~Camera()
@@ -55,7 +58,7 @@ namespace HGF
     {
       default:
       case ViewType::Orthographic:
-        return glm::ortho(0.0f, (float)m_Width, (float)m_Height, 0.0f, 1.0f, -1.0f);
+        return glm::ortho(0.0f, (float)m_Width, 0.0f, (float)m_Height, 1.0f, -1.0f);
       case ViewType::Perspective:
         return glm::perspective(45.0f, m_Width / (float)m_Height, 0.1f, 1000.0f);
     }
@@ -64,9 +67,9 @@ namespace HGF
   glm::mat4 Camera::GetModelViewMatrix() const
   {
     glm::mat4 modelViewMatrix;
-    modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(m_Width / 2.0f, m_Height / 2.0f, 0.0f));
+    modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(m_HalfWidth, m_HalfHeight, 0.0f));
     modelViewMatrix = glm::scale(modelViewMatrix, glm::vec3(m_Scale.X, m_Scale.Y, 1.0f));
-    modelViewMatrix = glm::rotate(modelViewMatrix, m_Rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+    modelViewMatrix = glm::rotate(modelViewMatrix, m_Rotation, ForwardAxis);
     modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(-m_Position.X, -m_Position.Y, 0.0f));
 
     return modelViewMatrix;
@@ -97,17 +100,21 @@ namespace HGF
   void Camera::SetWidth(unsigned int p_Width)
   {
     m_Width = p_Width;
+    m_HalfWidth = m_Width / 2.0f;
   }
 
   void Camera::SetHeight(unsigned int p_Height)
   {
     m_Height = p_Height;
+    m_HalfHeight = m_Height / 2.0f;
   }
 
   void Camera::SetDimensions(unsigned int p_Width, unsigned int p_Height)
   {
     m_Width = p_Width;
+    m_HalfWidth = m_Width / 2.0f;
     m_Height = p_Height;
+    m_HalfHeight = m_Height / 2.0f;
   }
 
   void Camera::Translate(const HM::Vector2f& p_Translation)

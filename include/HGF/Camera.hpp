@@ -47,12 +47,15 @@ namespace HGF
     private:
       static const unsigned int DefaultWidth;
       static const unsigned int DefaultHeight;
+      static const glm::vec3 ForwardAxis;
 
       HM::Vector2f m_Position;
       float m_Rotation;
       HM::Vector2f m_Scale;
       unsigned int m_Width;
+      float m_HalfWidth;
       unsigned int m_Height;
+      float m_HalfHeight;
   };
 }
 
